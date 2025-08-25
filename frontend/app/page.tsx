@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { RiDeleteBin2Fill } from "react-icons/ri";
 
 export default function Home() {
   return (
@@ -16,20 +16,27 @@ export default function Home() {
           <p>Thurs 9</p>
           <p>6:23 AM</p>
         </div>
-        <div className="mt-[40px]">
-          <form action="POST" className="flex gap-2 border">
+        <div className="mt-[40px] mx-[40px]">
+          <form action="POST" className="flex ">
             <input
               type="text"
-              className="border w-[80%] ml-[40px] py-[10px] rounded-3xl"
+              className="border border-r-0 w-full py-[10px] rounded-3xl rounded-tr-none rounded-br-none"
             />
-            <button type="submit" className="border-2 py-[10px]">
+            <button
+              type="submit"
+              className="border py-[10px] px-[20px] rounded-tr-3xl rounded-br-3xl"
+            >
               Add
             </button>
           </form>
-          <div>
-            <div>
+          <div className="border mt-[30px] flex justify-between">
+            <div className="">
               <p>Dinner </p>
               <p>Today at 6:00 PM</p>
+            </div>
+            <div className="flex">
+              <input type="radio" name="status" id="status" />
+              <RiDeleteBin2Fill />
             </div>
           </div>
         </div>
