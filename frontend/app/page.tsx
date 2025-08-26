@@ -109,7 +109,7 @@ export default function Home() {
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="border border-black py-[10px]  px-[20px] rounded-tr-3xl rounded-br-3xl cursor-pointer bg-white/20 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="border border-black py-[10px]  px-[20px] rounded-tr-3xl rounded-br-3xl cursor-pointer bg-white/20 backdrop-blur-sm hover:opacity-[80%]"
             >
               {loading ? "Adding..." : "Add"}
             </button>
@@ -132,11 +132,17 @@ export default function Home() {
                     <p className="font-bold">{todo.text}</p>
                     <p className="text-sm text-gray-300">
                       {todo.createdAt
-                        ? new Date(todo.createdAt).toLocaleTimeString([], {
+                        ? new Date(todo.createdAt).toLocaleDateString([], {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          }) +
+                          " at " +
+                          new Date(todo.createdAt).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
                           })
-                        : "No time"}
+                        : "No date"}
                     </p>
                   </div>
                   <div className="flex items-center gap-4">

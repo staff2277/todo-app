@@ -11,7 +11,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://todo-app-frontend-xeux.onrender.com",
-      /\.onrender\.com$/,
+      "https://todo-app-backend-6zsb.onrender.com",
     ],
   })
 );
@@ -29,14 +29,6 @@ try {
 function saveTodos() {
   fs.writeFileSync("todos.json", JSON.stringify(todos, null, 2));
 }
-
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    timestamp: new Date().toISOString(),
-    todos_count: todos.length,
-  });
-});
 
 app.get("/", (req, res) => {
   res.json({
@@ -77,7 +69,6 @@ app.put("/todos/:id", (req, res) => {
 app.delete("/todos/:id", (req, res) => {
   const id = Number(req.params.id);
   console.log("DELETE /todos/" + id);
-  const initialLength = todos.length;
   todos = todos.filter((todo) => todo.id !== id);
   saveTodos();
   console.log("Deleted todo, remaining:", todos.length);
