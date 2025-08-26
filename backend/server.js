@@ -5,7 +5,12 @@ import fs from "fs";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors("http://localhost:3000", "https://todo-app-ho2w.onrender.com"));
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://todo-app-ho2w.onrender.com"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 let todos = [];
