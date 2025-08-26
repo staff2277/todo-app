@@ -18,7 +18,6 @@ interface Todo {
   createdAt: string;
 }
 
-// Updated API URL to point to your deployed backend
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://todo-app-backend-6zsb.onrender.com";
@@ -33,12 +32,10 @@ export default function Home() {
   useEffect(() => {
     fetchTodos();
 
-    // Update time every second
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
 
-    // Cleanup timer on component unmount
     return () => clearInterval(timer);
   }, []);
 
