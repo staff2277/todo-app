@@ -18,20 +18,20 @@ interface Todo {
   createdAt: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [input, setInput] = useState("");
 
   useEffect(() => {
-    axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/todos`)
-      .then((res) => setTodos(res.data));
+    axios.get(`${API_URL}/todos`).then((res) => setTodos(res.data));
   }, []);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
-    const res = await axios.post("http://localhost:5000/todos", {
+    const res = await axios.post(`${API_URL}/todos`, {
       text: input,
     });
     setTodos((prev) => [...prev, res.data]);
@@ -39,7 +39,7 @@ export default function Home() {
   };
 
   const handleDelete = async (id: number) => {
-    await axios.delete(`http://localhost:5000/todos/${id}`);
+    await axios.delete(`${API_URL}/todos/${id}`);
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 
