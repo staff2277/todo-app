@@ -3,7 +3,7 @@ import cors from "cors";
 import fs from "fs";
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -26,7 +26,11 @@ app.get("/todos", (req, res) => {
 });
 
 app.post("/todos", (req, res) => {
-  const newTodo = { id: Date.now(), ...req.body };
+  const newTodo = {
+    id: Date.now(),
+    createdAt: new Date().toISOString(),
+    ...req.body,
+  };
   todos.push(newTodo);
   saveTodos();
   res.status(201).json(newTodo);
