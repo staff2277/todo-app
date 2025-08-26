@@ -8,7 +8,11 @@ const PORT = process.env.PORT || 5000;
 app.use(
   cors({
     credentials: true,
-    origin: true,
+    origin: [
+      "http://localhost:3000",
+      "https://todo-app-frontend-xeux.onrender.com",
+      /\.onrender\.com$/,
+    ],
   })
 );
 app.use(express.json());
@@ -26,11 +30,29 @@ function saveTodos() {
   fs.writeFileSync("todos.json", JSON.stringify(todos, null, 2));
 }
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    todos_count: todos.length,
+  });
+});
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "Todo API is running!",
+    endpoints: ["/todos", "/health"],
+    todos_count: todos.length,
+  });
+});
+
 app.get("/todos", (req, res) => {
+  console.log("GET /todos - returning", todos.length, "todos");
   res.json(todos);
 });
 
 app.post("/todos", (req, res) => {
+  console.log("POST /todos - received:", req.body);
   const newTodo = {
     id: Date.now(),
     createdAt: new Date().toISOString(),
@@ -38,11 +60,13 @@ app.post("/todos", (req, res) => {
   };
   todos.push(newTodo);
   saveTodos();
+  console.log("Created new todo:", newTodo);
   res.status(201).json(newTodo);
 });
 
 app.put("/todos/:id", (req, res) => {
   const id = Number(req.params.id);
+  console.log("PUT /todos/" + id, "- received:", req.body);
   todos = todos.map((todo) =>
     todo.id === id ? { ...todo, ...req.body } : todo
   );
@@ -52,11 +76,15 @@ app.put("/todos/:id", (req, res) => {
 
 app.delete("/todos/:id", (req, res) => {
   const id = Number(req.params.id);
+  console.log("DELETE /todos/" + id);
+  const initialLength = todos.length;
   todos = todos.filter((todo) => todo.id !== id);
   saveTodos();
+  console.log("Deleted todo, remaining:", todos.length);
   res.json({ message: "Todo deleted" });
 });
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
+  console.log("Loaded", todos.length, "existing todos");
 });
