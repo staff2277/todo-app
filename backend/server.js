@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 5000;
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://todo-app-87vt.onrender.com"],
     credentials: true,
+    origin: true,
   })
 );
 app.use(express.json());
