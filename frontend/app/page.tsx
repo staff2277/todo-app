@@ -33,7 +33,7 @@ export default function Home() {
             />
             <button
               type="submit"
-              className="border border-black py-[10px] px-[20px] rounded-tr-3xl rounded-br-3xl cursor-pointer bg-white/20 backdrop-blur-sm"
+              className="border border-black py-[10px]  px-[20px] rounded-tr-3xl rounded-br-3xl cursor-pointer bg-white/20 backdrop-blur-sm"
             >
               Add
             </button>

@@ -1,24 +1,53 @@
 import express from "express";
 import cors from "cors";
+import fs from "fs";
 
 const app = express();
 const PORT = 5000;
 
-//Handling middleware to ensure that the front end is able to talk with the backend
-
 app.use(cors());
 app.use(express.json());
 
-let todos = [
-  { id: 1, task: "Learn Node basics", completed: false },
-  { id: 2, task: "Build CRUD API", completed: false },
-];
+let todos = [];
+try {
+  const data = fs.readFileSync("todos.json", "utf-8");
+  todos = JSON.parse(data);
+} catch (error) {
+  console.log("No todos.json found, starting fresh");
+  todos = [];
+}
 
-app.get("/", (req, res) => {
-  res.json({ message: "This a message that is running in the backend" });
+function saveTodos() {
+  fs.writeFileSync("todos.json", JSON.stringify(todos, null, 2));
+}
+
+app.get("/todos", (req, res) => {
+  res.json(todos);
 });
 
-//Starting the server
+app.post("/todos", (req, res) => {
+  const newTodo = { id: Date.now(), ...req.body };
+  todos.push(newTodo);
+  saveTodos();
+  res.status(201).json(newTodo);
+});
+
+app.put("/todos/:id", (req, res) => {
+  const id = Number(req.params.id);
+  todos = todos.map((todo) =>
+    todo.id === id ? { ...todo, ...req.body } : todo
+  );
+  saveTodos();
+  res.json({ message: "Todo updated" });
+});
+
+app.delete("/todos/:id", (req, res) => {
+  const id = Number(req.params.id);
+  todos = todos.filter((todo) => todo.id !== id);
+  saveTodos();
+  res.json({ message: "Todo deleted" });
+});
+
 app.listen(PORT, () => {
-  console.log("The server is up and running");
+  console.log(`Server running on http://localhost:${PORT}`);
 });
