@@ -18,6 +18,7 @@ interface Todo {
   createdAt: string;
 }
 
+// Updated API URL to point to your deployed backend
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://todo-app-backend-6zsb.onrender.com";
@@ -27,9 +28,18 @@ export default function Home() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
     fetchTodos();
+
+    // Update time every second
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    // Cleanup timer on component unmount
+    return () => clearInterval(timer);
   }, []);
 
   const fetchTodos = async () => {
@@ -85,8 +95,19 @@ export default function Home() {
           style={{ fontFamily: russoOne.style.fontFamily }}
         >
           <div className="mx-[50px] my-[20px] ">
-            <p className="sm:text-[1.5rem] max-lg:text-[1.3rem]">Thurs 9</p>
-            <p className="sm:text-[3.5rem] max-lg:text-[2.5rem]">6:23 AM</p>
+            <p className="sm:text-[1.5rem] max-lg:text-[1.3rem]">
+              {currentTime.toLocaleDateString("en-US", {
+                weekday: "short",
+                day: "numeric",
+              })}
+            </p>
+            <p className="sm:text-[3.5rem] max-lg:text-[2.5rem]">
+              {currentTime.toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+                hour12: true,
+              })}
+            </p>
           </div>
         </div>
 
@@ -130,7 +151,7 @@ export default function Home() {
                 >
                   <div>
                     <p className="font-bold">{todo.text}</p>
-                    <p className="text-sm text-gray-300">
+                    <p className="text-[.8rem] text-gray-300 max-sm:hidden">
                       {todo.createdAt
                         ? new Date(todo.createdAt).toLocaleDateString([], {
                             year: "numeric",
